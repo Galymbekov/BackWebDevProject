@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'login',
     'registration',
-    'shopmain'
+    'shop'
 ]
 
 MIDDLEWARE = [
@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'back.urls'
+ROOT_URLCONF = 'shop.urls'
 
 TEMPLATES = [
     {
