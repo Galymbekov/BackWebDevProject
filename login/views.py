@@ -1,6 +1,7 @@
 from login.models import *
 from login.serializers import *
 from rest_framework.decorators import api_view
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
@@ -9,7 +10,21 @@ from django.http import JsonResponse
 
 
 class Auth(APIView):
-    permission_classes = (IsAuthenticated)
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        content = {
+            'user': str(request.user),
+            'auth': str(request.auth)
+        }
+        return Response(content)
+
+
+class LogOut(APIView):
+    def get(self, request, format=None):
+        request.user.auth_token.delete()
+        return Response(status=status.HTTP_200_OK)
 
 
 class LoginUser(APIView):

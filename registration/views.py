@@ -6,6 +6,10 @@ from rest_framework.response import Response
 from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
 
 
 class RegUser(APIView):
@@ -30,3 +34,8 @@ def reg_detail(request, user_id):
             serializer.save()
             return Response(serializer.data)
         return Response({'error': serializer.errors})
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
