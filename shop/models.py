@@ -1,6 +1,8 @@
 from django.db import models
 
+
 class Shop(models.Model):
+    id = models.IntegerField(primary_key=True)
     like = models.BooleanField(default=False)
     price = models.FloatField(max_length=200, default=None)
     description = models.CharField(max_length=200, default=None)
@@ -16,9 +18,10 @@ class Shop(models.Model):
             'description': self.description
         }
 
-class Filter(models.Model):
-    fromdata = models.FloatField(max_length=200, default=None)
-    enddata = models.FloatField(max_length=200, default=None)
+
+class Whishlist(models.Model):
+    id = models.ForeignKey(Shop.id)
+    liked = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Filter'
