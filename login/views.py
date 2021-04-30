@@ -2,11 +2,13 @@ from login.models import *
 from login.serializers import *
 from rest_framework.decorators import api_view
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework import status, generics
+from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
+from django.contrib.auth import get_user_model
 
 
 class Auth(APIView):
@@ -21,12 +23,6 @@ class Auth(APIView):
         return Response(content)
 
 
-class LogOut(APIView):
-    def get(self, request, format=None):
-        request.user.auth_token.delete()
-        return Response(status=status.HTTP_200_OK)
-
-
 class LoginUser(APIView):
     def list(self, request):
         serializer = LoginSerializer(data=request.data)
@@ -34,6 +30,15 @@ class LoginUser(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class LogOut(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+
+    def get(self, request, format=None):
+        request.user.auth_token.delete()
+        return Response(status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])

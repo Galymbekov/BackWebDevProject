@@ -14,15 +14,19 @@ from rest_framework.authtoken.models import Token
 
 class RegUser(APIView):
     def post(self, request):
-        serializer =RegistrationSerializer(data=request.data)
+        serializer = RegistrationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+class AccountCreateAPIView(generics.CreateAPIView):
+    serializer_class = RegSerializer
+
+
 @api_view(['PUT'])
 def reg_detail(request, user_id):
-
     try:
         user = Registration.objects.get(id=user_id)
     except Registration.DoesNotExist as e:
@@ -34,6 +38,7 @@ def reg_detail(request, user_id):
             serializer.save()
             return Response(serializer.data)
         return Response({'error': serializer.errors})
+
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):

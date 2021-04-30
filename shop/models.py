@@ -20,15 +20,15 @@ class Shop(models.Model):
 
 
 class Whishlist(models.Model):
-    id = models.ForeignKey(Shop.id)
+    ids = models.ForeignKey(Shop, on_delete=models.CASCADE)
     liked = models.BooleanField(default=False)
 
     class Meta:
-        verbose_name = 'Filter'
-        verbose_name_plural = 'Filters'
+        verbose_name = 'Like'
+        verbose_name_plural = 'Liked'
 
     def to_json(self):
         return {
-            'fromdata': self.fromdata,
-            'enddata': self.enddata
+            'ids': self.ids,
+            'liked': self.liked
         }

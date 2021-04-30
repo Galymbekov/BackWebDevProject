@@ -2,6 +2,7 @@ from rest_framework import serializers
 from registration.models import *
 from django.contrib.auth.models import User
 
+
 class RegistrationSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(required=True)
@@ -18,11 +19,21 @@ class RegistrationSerializer(serializers.Serializer):
                                            confpass=validated_data.get('confpass'))
         return user
 
+
 class RegSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'name', 'email', 'username', 'password', 'confpass']
+        fields = ['name', 'email', 'username', 'password', 'confpass']
 
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
+        user = User(
+            name=validated_data['name'],
+            email=validated_data['email'],
+            username=validated_data['username'],
+        )
+        user.set_password(validated_data['password'])
+        user.set_password(validated_data['confpass'])
+        user.save()
         return user
+
+

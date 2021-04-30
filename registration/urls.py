@@ -4,5 +4,5 @@ from rest_framework_jwt.views import obtain_jwt_token
 from rest_framework.authtoken.views import ObtainAuthToken
 
 urlpatterns = [
-    path('register/', RegUser)
+    path('signup/', RegUser.as_view())
 ]

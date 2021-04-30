@@ -3,9 +3,6 @@ from registration.models import Registration
 from rest_framework.authtoken.models import Token
 
 
-token = Token.objects.create(user=...)
-print(token.key)
-
 class Manager(models.Manager):
     people = models.Manager()
 
@@ -16,7 +13,7 @@ class Manager(models.Manager):
 
 
 class Login(models.Model):
-    id = models.ForeignKey(Registration.id, on_delete=models.CASCADE)
+    ids = models.ForeignKey(Registration, on_delete=models.CASCADE, default=0)
     username = models.CharField(max_length=200, default=None)
     password = models.CharField(max_length=200, default=None)
     remember = models.BooleanField(default=False)
